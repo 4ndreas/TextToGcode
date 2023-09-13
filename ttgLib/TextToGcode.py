@@ -21,7 +21,7 @@ from math import cos, sin, radians
 
 
 class ttg:
-    def __init__(self, text, size, rotation, method, feedRate):
+    def __init__(self, text, size, rotation,posX, posY, method, feedRate):
         # validate input types
         if type(text) != str:
             raise Exception("TTG ERROR - passed text needs to be a string")
@@ -42,6 +42,8 @@ class ttg:
         self.text = text
         self.size = size
         self.rotation = radians(rotation)
+        self.posX = posX
+        self.posY = posY
         self.method = method.lower() # lowercase this for matching
         self.feedRate = str(feedRate)
 
@@ -74,6 +76,7 @@ class ttg:
                 else:
                     scaledPoint = (point[0], point[1])
 
+
                 # if we need to rotate the text verticies, rotate them by the specified radians
                 # if we dont send the point to final operations without rotating
                 if self.rotationNeeded:
@@ -89,9 +92,11 @@ class ttg:
                         + sin(self.rotation) * (scaledPoint[0] - originX)
                         + cos(self.rotation) * (scaledPoint[1] - originY)
                     )
-                    newpoint = (newpointX, newpointY)
+                    # add pos
+                    newpoint = (newpointX+ self.posX, newpointY+ self.posY)
                 else:
-                    newpoint = (scaledPoint[0], scaledPoint[1])
+                    # add pos
+                    newpoint = (scaledPoint[0]+ self.posX, scaledPoint[1]+ self.posY)
 
                 finalOperations.append(newpoint)
 
@@ -130,8 +135,8 @@ class ttg:
             # G90 - absolute positioning
             # G21 - metric values
             # G1 F[string of number] - feedrate
-            finalOperations.insert(0, "G90")
-            finalOperations.insert(0, "G21")
+            # finalOperations.insert(0, "G90")
+            # finalOperations.insert(0, "G21")
             finalOperations.insert(0, "G1 F" + self.feedRate)
 
             returnList = []
