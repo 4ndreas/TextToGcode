@@ -140,7 +140,7 @@ class ttg:
             finalOperations.insert(0, "G1 F" + self.feedRate)
 
             returnList = []
-            lastMoveType = ""
+            lastMoveType = "slow"
 
             for command in finalOperations:
                 currentCommand = ""
